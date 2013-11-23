@@ -82,4 +82,46 @@ public class Grid
         return cells[0].length;
     }
 
+    @Override
+    public String toString()
+    {
+        StringBuilder buf = new StringBuilder();
+
+        int clusterSideLen = (int)Math.sqrt( getSideLen() );
+
+        for ( int i = 0; i < getSideLen(); i++ )
+        {
+            for ( int j = 0; j < getSideLen(); j++ )
+            {
+                if ( j > 0 )
+                    buf.append( ' ' );
+
+//                if ( j % clusterSideLen == 0 )
+//                {
+//                    buf.append( '|' );
+//                }
+
+                Cell cell = getCell( i, j );
+                Integer value = cell.getValue();
+                if ( value == null )
+                {
+                    buf.append( " -" );
+                }
+                else
+                {
+                    if ( value < 10 )
+                    {
+                        buf.append( ' ' );
+                    }
+
+                    buf.append( value );
+                }
+            }
+
+            buf.append( '\n' );
+        }
+
+        return buf.toString();
+    }
+
 }
