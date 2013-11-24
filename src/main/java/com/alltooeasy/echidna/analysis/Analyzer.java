@@ -1,21 +1,26 @@
 package com.alltooeasy.echidna.analysis;
 
+import java.awt.Component;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.alltooeasy.echidna.domain.Cell;
 import com.alltooeasy.echidna.domain.Grid;
 
 public class Analyzer
 {
+    final static private Logger log = LoggerFactory.getLogger( Analyzer.class );
 
-    public static void analyze( Grid g )
+    public static void analyze( Grid g, Component target )
     {
         Analyzer a = new Analyzer();
-        a.doAnalysis( g );
+        a.doAnalysis( g, target );
     }
 
-    private void doAnalysis( Grid g )
+    private void doAnalysis( Grid g, Component target )
     {
 
         //loop through each cell
@@ -28,67 +33,100 @@ public class Analyzer
 
         int sideLen = g.getSideLen();
 
-        for ( int i = 0; i < sideLen; i++ )
+        boolean runLoop = true;
+
+        for ( int loopCount = 0; runLoop; loopCount++ )
         {
-            for ( int j = 0; j < sideLen; j++ )
+            boolean isComplete = true;
+            boolean foundAValue = false;
+
+            for ( int i = 0; i < sideLen; i++ )
             {
-                Cell cell = g.getCell( i, j );
-                Integer value = cell.getValue();
-                if ( value == null )
+                for ( int j = 0; j < sideLen; j++ )
                 {
-                    Cell[] row = g.getRow( i );
-                    Cell[] col = g.getCol( j );
-                    Grid cluster = g.getCluster( i, j );
-                    boolean[] candidates = new boolean[sideLen];
-                    for ( int k = 0; k < candidates.length; k++ )
+                    Cell cell = g.getCell( i, j );
+                    Integer value = cell.getValue();
+                    if ( value == null )
                     {
-                        candidates[k] = true;
-                    }
+                        isComplete = false;
 
-                    for ( int k = 0; k < row.length; k++ )
-                    {
-                        Integer v = row[k].getValue();
-
-                        if ( v != null )
-                            candidates[v - 1] = false;
-                    }
-
-
-                    for ( int k = 0; k < col.length; k++ )
-                    {
-                        Integer v = col[k].getValue();
-
-                        if ( v != null )
-                            candidates[v - 1] = false;
-                    }
-
-                    int clusterSideLen = cluster.getSideLen();
-                    for ( int k = 0; k < clusterSideLen; k++ )
-                    {
-                        for ( int l = 0; l < clusterSideLen; l++ )
+                        Cell[] row = g.getRow( i );
+                        Cell[] col = g.getCol( j );
+                        Grid cluster = g.getCluster( i, j );
+                        boolean[] candidates = new boolean[sideLen];
+                        for ( int k = 0; k < candidates.length; k++ )
                         {
-                            Integer v = cluster.getCell( k, l ).getValue();
+                            candidates[k] = true;
+                        }
+
+                        for ( int k = 0; k < row.length; k++ )
+                        {
+                            Integer v = row[k].getValue();
 
                             if ( v != null )
                                 candidates[v - 1] = false;
                         }
-                    }
 
-                    List<Integer> validCandidates = new ArrayList<Integer>( candidates.length );
 
-                    for ( int k = 0; validCandidates.size() <= 1 && k < candidates.length; k++ )
-                    {
-                        if ( candidates[k] )
-                            validCandidates.add( k );
-                    }
+                        for ( int k = 0; k < col.length; k++ )
+                        {
+                            Integer v = col[k].getValue();
 
-                    if ( validCandidates.size() == 1 )
-                    {
-                        cell.setValue( validCandidates.get( 0 ) + 1 );
+                            if ( v != null )
+                                candidates[v - 1] = false;
+                        }
+
+                        int clusterSideLen = cluster.getSideLen();
+                        for ( int k = 0; k < clusterSideLen; k++ )
+                        {
+                            for ( int l = 0; l < clusterSideLen; l++ )
+                            {
+                                Integer v = cluster.getCell( k, l ).getValue();
+
+                                if ( v != null )
+                                    candidates[v - 1] = false;
+                            }
+                        }
+
+                        List<Integer> validCandidates = new ArrayList<Integer>( candidates.length );
+
+                        for ( int k = 0; validCandidates.size() <= 1 && k < candidates.length; k++ )
+                        {
+                            if ( candidates[k] )
+                                validCandidates.add( k );
+                        }
+
+                        if ( validCandidates.size() == 1 )
+                        {
+                            int v = validCandidates.get( 0 ) + 1;
+                            log.info( "Found value for ({}, {})={}.", i+1, j+1, v );
+                            cell.setValue( v );
+                            foundAValue = true;
+//                            try
+//                            {
+//                                Thread.sleep( 300 );
+//                            }
+//                            catch ( InterruptedException e )
+//                            {
+//                                //No-op.
+//                            }
+                            target.repaint();
+                        }
                     }
                 }
             }
+
+            log.info( "Loop {}: isComplete={}, foundAValue={}.", loopCount + 1, isComplete, foundAValue );
+
+            if ( isComplete )
+                runLoop = false;
+            else
+            {
+                runLoop = foundAValue;
+            }
         }
+
+        target.repaint();
     }
 
 }

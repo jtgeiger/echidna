@@ -20,14 +20,12 @@ public class Tester
         log.info( "main() started." );
 
         //Grid g = new Grid();
-        Grid g = GridLoader.load( getClasspathResource( "/test1.txt" ) );
+        Grid g = GridLoader.load( getClasspathResource( "/test2.txt" ) );
         SudokuPanel panel = new SudokuPanel( g );
         GuiBuilder guiBuilder = new GuiBuilder( panel );
         guiBuilder.show();
 
-        Analyzer.analyze( g );
-
-        panel.repaint();
+        Analyzer.analyze( g, panel );
 
         long endMs = System.currentTimeMillis();
 
