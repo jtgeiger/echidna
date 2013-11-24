@@ -5,6 +5,7 @@ import java.io.InputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.alltooeasy.echidna.analysis.Analyzer;
 import com.alltooeasy.echidna.domain.Grid;
 import com.alltooeasy.echidna.io.GridLoader;
 
@@ -19,10 +20,14 @@ public class Tester
         log.info( "main() started." );
 
         //Grid g = new Grid();
-        Grid g = GridLoader.load( getClasspathResource( "/gridPlain.txt" ) );
+        Grid g = GridLoader.load( getClasspathResource( "/test1.txt" ) );
         SudokuPanel panel = new SudokuPanel( g );
         GuiBuilder guiBuilder = new GuiBuilder( panel );
         guiBuilder.show();
+
+        Analyzer.analyze( g );
+
+        panel.repaint();
 
         long endMs = System.currentTimeMillis();
 
