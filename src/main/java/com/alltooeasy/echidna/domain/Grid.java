@@ -87,7 +87,7 @@ public class Grid
     {
         StringBuilder buf = new StringBuilder();
 
-        int clusterSideLen = (int)Math.sqrt( getSideLen() );
+        //int clusterSideLen = (int)Math.sqrt( getSideLen() );
 
         for ( int i = 0; i < getSideLen(); i++ )
         {
