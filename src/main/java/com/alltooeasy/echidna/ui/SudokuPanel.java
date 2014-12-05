@@ -1,5 +1,6 @@
 package com.alltooeasy.echidna.ui;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 
@@ -13,7 +14,7 @@ public class SudokuPanel extends JPanel
 
     private static final long serialVersionUID = 1L;
 
-    private Grid grid;
+    private final Grid grid;
 
     public SudokuPanel( Grid grid )
     {
@@ -44,6 +45,14 @@ public class SudokuPanel extends JPanel
                 String s = "-";
                 if ( value != null )
                 {
+                    Color fore = g.getColor();
+                    Color back = getBackground();
+
+                    g.setColor( back );
+                    g.drawString( s, x, y );    //Erase the '-'
+
+                    g.setColor( fore );
+
                     s = value.toString();
                 }
 
