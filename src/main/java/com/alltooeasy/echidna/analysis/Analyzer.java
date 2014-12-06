@@ -34,13 +34,24 @@ public class Analyzer
 
     final static private Logger log = LoggerFactory.getLogger( Analyzer.class );
 
-    public static void analyze( Grid g, Controller controller )
-    {
-        Analyzer a = new Analyzer();
-        a.doAnalysis( g, controller );
+    private final Controller controller;
+
+    private Analyzer( Controller controller ) {
+        this.controller = controller;
     }
 
-    private void doAnalysis( Grid g, Controller controller )
+    public static boolean analyze( Grid g, Controller controller )
+    {
+        Analyzer a = new Analyzer( controller );
+//        a.doAnalysis( g );
+        a.backtrack( g, 0, -1 );
+        boolean isComplete = isGridComplete( g );
+        System.out.println(isComplete);
+        System.out.println(g);
+        return isComplete;
+    }
+
+    private void doAnalysis( Grid g )
     {
 
         //loop through each cell
@@ -206,6 +217,78 @@ public class Analyzer
         }
 
         return true;
+    }
+
+    private boolean isBacktrackFinished = false;
+    private void backtrack(Grid g, int row, int col) {
+
+        if (row + 1 == g.getSideLen() && col + 1 == g.getSideLen() ) {
+            isBacktrackFinished = true;
+            controller.draw( g );
+        } else {
+
+            col++;
+            if ( col >= g.getSideLen()) {
+                col = 0;
+                row++;
+            }
+
+            List<Integer> candidates = generateCandidates(g, row, col);
+
+            for (int i = 0; i < candidates.size(); i++) {
+
+                Cell cell = g.getCell( row, col );
+                boolean isValuePredefined = cell.getValue() != null;
+                cell.setValue( candidates.get(i) );
+
+                controller.draw( g );
+
+                backtrack(g, row, col);
+
+                if (isBacktrackFinished)
+                    return;
+
+                if ( ! isValuePredefined )
+                    cell.setValue( null );
+            }
+
+        }
+    }
+
+    private List<Integer> generateCandidates( Grid g, int row, int col )
+    {
+        if ( g.getCell( row, col ).getValue() != null ) {
+            return Arrays.asList( g.getCell(row, col).getValue() );
+        }
+
+        boolean[] hits = new boolean[g.getSideLen()];
+
+        setHits( g.getRow( row ), hits );
+        setHits( g.getCol( col ), hits );
+
+        Grid cluster = g.getCluster( row, col );
+        for ( int i = 0; i < cluster.getSideLen(); i++) {
+            setHits( cluster.getRow( i ), hits );
+            setHits( cluster.getCol( i ), hits );
+        }
+
+        List<Integer> nonHits = new ArrayList<Integer>(hits.length);
+        for (int i = 0; i < hits.length; i++) {
+            if (!hits[i]) {
+                nonHits.add(i + 1);
+            }
+        }
+
+        return nonHits;
+    }
+
+    private void setHits( Cell[] run, boolean[] hits )
+    {
+        for ( Cell c : run ) {
+            if (c.getValue() != null) {
+                hits[c.getValue() - 1] = true;
+            }
+        }
     }
 
 }
