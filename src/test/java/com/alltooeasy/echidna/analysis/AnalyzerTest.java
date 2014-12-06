@@ -30,9 +30,6 @@ public class AnalyzerTest
 
         Grid g;
 
-        g = GridLoader.load( new InputStreamReader( Tester.getClasspathResource( "/test1.txt" )) );
-        assertTrue( Analyzer.analyze( g, controller ));
-
         g = GridLoader.load( new InputStreamReader( Tester.getClasspathResource( "/test2.txt" )) );
         assertTrue( Analyzer.analyze( g, controller ));
 

@@ -7,3 +7,5 @@
 - - - - - - 4 - -
 - - - - - - 2 - -
 - - - - - - 1 - -
+
+#This grid is an invalid Sudoku because it has multiple solutions.
