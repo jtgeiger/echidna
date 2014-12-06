@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
 
+import com.alltooeasy.echidna.domain.Cell;
 import com.alltooeasy.echidna.domain.Grid;
 
 public class GridLoader
@@ -33,7 +34,9 @@ public class GridLoader
                     try
                     {
                         int value = Integer.parseInt( token );
-                        g.getCell( i, j ).setValue( value );
+                        Cell cell = g.getCell( i, j );
+                        cell.setValue( value );
+                        cell.setLocked(true);
                     }
                     catch ( NumberFormatException e )
                     {

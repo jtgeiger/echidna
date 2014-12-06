@@ -238,8 +238,16 @@ public class Analyzer
             for (int i = 0; i < candidates.size(); i++) {
 
                 Cell cell = g.getCell( row, col );
-                boolean isValuePredefined = cell.getValue() != null;
-                cell.setValue( candidates.get(i) );
+                boolean isLocked = cell.isLocked();
+
+                if (isLocked) {
+                    if (cell.getValue() != candidates.get( i ) ) {
+                        throw new IllegalStateException("Expected candidate=" + cell.getValue() +
+                                ", actual=" + candidates.get(i));
+                    }
+                } else {
+                    cell.setValue( candidates.get(i) );
+                }
 
                 controller.draw( g );
 
@@ -248,7 +256,7 @@ public class Analyzer
                 if (isBacktrackFinished)
                     return;
 
-                if ( ! isValuePredefined )
+                if ( ! isLocked )
                     cell.setValue( null );
             }
 
