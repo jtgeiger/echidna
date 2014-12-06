@@ -17,8 +17,13 @@ public class AnalyzerTest
     @Test
     public void testIsGridComplete()
     {
-        Grid g = GridLoader.load( new InputStreamReader( Tester.getClasspathResource( "/test3.txt" )) );
+        Grid g;
+
+        g = GridLoader.load( new InputStreamReader( Tester.getClasspathResource( "/test3.txt" )) );
         assertFalse( Analyzer.isGridComplete( g ));
+
+        g = GridLoader.load( new InputStreamReader( Tester.getClasspathResource( "/test3-solution.txt" )) );
+        assertTrue( Analyzer.isGridComplete( g ));
 
         g = GridLoader.load( new InputStreamReader( Tester.getClasspathResource( "/test5-solution.txt" )) );
         assertTrue( Analyzer.isGridComplete( g ));
