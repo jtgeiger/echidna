@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import com.alltooeasy.echidna.domain.Cell;
 import com.alltooeasy.echidna.domain.Grid;
-import com.alltooeasy.echidna.engine.Controller;
+import com.alltooeasy.echidna.engine.ControllerI;
 
 public class Analyzer
 {
@@ -34,13 +34,13 @@ public class Analyzer
 
     final static private Logger log = LoggerFactory.getLogger( Analyzer.class );
 
-    private final Controller controller;
+    private final ControllerI controller;
 
-    private Analyzer( Controller controller ) {
+    private Analyzer( ControllerI controller ) {
         this.controller = controller;
     }
 
-    public static boolean analyze( Grid g, Controller controller )
+    public static boolean analyze( Grid g, ControllerI controller )
     {
         Analyzer a = new Analyzer( controller );
 //        a.doAnalysis( g );
