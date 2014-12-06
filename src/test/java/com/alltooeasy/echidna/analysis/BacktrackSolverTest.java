@@ -61,4 +61,14 @@ public class BacktrackSolverTest
         solve( "/test5.txt" );
     }
 
+    @Test
+    public void testSolve05() {
+        solve( "/test6.txt" );
+    }
+
+    @Test
+    public void testSolve06() {
+        solve( "/test7.txt" );
+    }
+
 }
