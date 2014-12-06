@@ -2,6 +2,7 @@ package com.alltooeasy.echidna.ui;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 
 import javax.swing.JPanel;
@@ -51,9 +52,9 @@ public class SudokuPanel extends JPanel
                 Cell cell = grid.getCell( i, j );
                 Integer value = cell.getValue();
                 String s = "-";
+                Color fore = g.getColor();
                 if ( value != null )
                 {
-                    Color fore = g.getColor();
                     Color back = getBackground();
 
                     g.setColor( back );
@@ -64,7 +65,21 @@ public class SudokuPanel extends JPanel
                     s = value.toString();
                 }
 
+                Font font = g.getFont();
+
+                if (cell.isLocked()) {
+                    Font bold = new Font( font.getName(), font.getStyle() | Font.BOLD, font.getSize() );
+                    g.setFont( bold );
+                    g.setColor( Color.RED );
+                }
+
                 g.drawString( s, x, y );
+
+                // Set back to normal for next cell.
+                if (cell.isLocked()) {
+                    g.setColor( fore );
+                    g.setFont( font );
+                }
             }
         }
     }
