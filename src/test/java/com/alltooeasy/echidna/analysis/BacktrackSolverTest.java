@@ -3,6 +3,7 @@ package com.alltooeasy.echidna.analysis;
 import static org.junit.Assert.assertTrue;
 
 import java.io.InputStreamReader;
+import java.io.Reader;
 
 import org.junit.Test;
 
@@ -14,8 +15,12 @@ import com.alltooeasy.echidna.ui.Tester;
 public class BacktrackSolverTest
 {
 
-    @Test
-    public void testSolve() {
+    private void solve( String resourceName ) {
+
+        solve(new InputStreamReader( Tester.getClasspathResource( resourceName )));
+    }
+
+    private void solve( Reader reader ) {
 
         ControllerI controller = new ControllerI() {
 
@@ -31,18 +36,29 @@ public class BacktrackSolverTest
 
         Grid g;
 
-        g = GridLoader.load( new InputStreamReader( Tester.getClasspathResource( "/test2.txt" )) );
+        g = GridLoader.load( reader );
         assertTrue( solver.solve( g ));
 
-        g = GridLoader.load( new InputStreamReader( Tester.getClasspathResource( "/test3.txt" )) );
-        assertTrue( solver.solve( g ));
+    }
 
-        g = GridLoader.load( new InputStreamReader( Tester.getClasspathResource( "/test4.txt" )) );
-        assertTrue( solver.solve( g ));
+    @Test
+    public void testSolve01() {
+        solve( "/test2.txt" );
+    }
 
-        g = GridLoader.load( new InputStreamReader( Tester.getClasspathResource( "/test5.txt" )) );
-        assertTrue( solver.solve( g ));
+    @Test
+    public void testSolve02() {
+        solve( "/test3.txt" );
+    }
 
+    @Test
+    public void testSolve03() {
+        solve( "/test4.txt" );
+    }
+
+    @Test
+    public void testSolve04() {
+        solve( "/test5.txt" );
     }
 
 }
