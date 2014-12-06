@@ -2,6 +2,8 @@ package com.alltooeasy.echidna.analysis;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 import com.alltooeasy.echidna.domain.Cell;
@@ -44,20 +46,24 @@ public class BacktrackSolver implements SolverI
                 row++;
             }
 
-            List<Integer> candidates = generateCandidates(g, row, col);
+            Collection<Integer> candidates = generateCandidates(g, row, col);
 
-            for (int i = 0; i < candidates.size(); i++) {
+//            System.out.println("(" + row + ", " + col + "): " + candidates);
+
+            for ( Iterator<Integer> iter = candidates.iterator(); iter.hasNext(); ) {
+
+                int val = iter.next();
 
                 Cell cell = g.getCell( row, col );
                 boolean isLocked = cell.isLocked();
 
                 if (isLocked) {
-                    if (cell.getValue() != candidates.get( i ) ) {
+                    if (cell.getValue() != val ) {
                         throw new IllegalStateException("Expected candidate=" + cell.getValue() +
-                                ", actual=" + candidates.get(i));
+                                ", actual=" + val);
                     }
                 } else {
-                    cell.setValue( candidates.get(i) );
+                    cell.setValue( val );
                 }
 
                 controller.draw( g );
@@ -74,9 +80,9 @@ public class BacktrackSolver implements SolverI
         }
     }
 
-    private static List<Integer> generateCandidates( Grid g, int row, int col )
+    private static Collection<Integer> generateCandidates( Grid g, int row, int col )
     {
-        if ( g.getCell( row, col ).getValue() != null ) {
+        if ( g.getCell( row, col ).isLocked() ) {
             return Arrays.asList( g.getCell(row, col).getValue() );
         }
 
