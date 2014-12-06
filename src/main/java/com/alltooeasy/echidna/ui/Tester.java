@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import com.alltooeasy.echidna.analysis.Analyzer;
 import com.alltooeasy.echidna.domain.Grid;
+import com.alltooeasy.echidna.engine.Controller;
 import com.alltooeasy.echidna.io.GridLoader;
 
 public class Tester
@@ -21,11 +22,13 @@ public class Tester
 
         //Grid g = new Grid();
         Grid g = GridLoader.load( getClasspathResource( "/test3.txt" ) );
-        SudokuPanel panel = new SudokuPanel( g );
+        SudokuPanel panel = new SudokuPanel();
         GuiBuilder guiBuilder = new GuiBuilder( panel );
         guiBuilder.show();
 
-        Analyzer.analyze( g, panel );
+        Controller controller = new Controller( panel );
+
+        Analyzer.analyze( g, controller );
 
         long endMs = System.currentTimeMillis();
 

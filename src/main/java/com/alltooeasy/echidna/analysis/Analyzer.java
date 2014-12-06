@@ -1,6 +1,5 @@
 package com.alltooeasy.echidna.analysis;
 
-import java.awt.Component;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,18 +8,19 @@ import org.slf4j.LoggerFactory;
 
 import com.alltooeasy.echidna.domain.Cell;
 import com.alltooeasy.echidna.domain.Grid;
+import com.alltooeasy.echidna.engine.Controller;
 
 public class Analyzer
 {
     final static private Logger log = LoggerFactory.getLogger( Analyzer.class );
 
-    public static void analyze( Grid g, Component target )
+    public static void analyze( Grid g, Controller controller )
     {
         Analyzer a = new Analyzer();
-        a.doAnalysis( g, target );
+        a.doAnalysis( g, controller );
     }
 
-    private void doAnalysis( Grid g, Component target )
+    private void doAnalysis( Grid g, Controller controller )
     {
 
         //loop through each cell
@@ -110,7 +110,7 @@ public class Analyzer
 //                            {
 //                                //No-op.
 //                            }
-                            target.repaint();
+                            controller.draw( g );
                         }
                     }
                 }
@@ -126,7 +126,7 @@ public class Analyzer
             }
         }
 
-        target.repaint();
+        controller.draw( g );
     }
 
 }

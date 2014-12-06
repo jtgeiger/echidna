@@ -14,11 +14,13 @@ public class SudokuPanel extends JPanel
 
     private static final long serialVersionUID = 1L;
 
-    private final Grid grid;
+    private Grid grid;
 
-    public SudokuPanel( Grid grid )
-    {
+    public SudokuPanel() {} //No-op.
+
+    public void draw( Grid grid ) {
         this.grid = grid;
+        repaint();
     }
 
     @Override
@@ -30,6 +32,12 @@ public class SudokuPanel extends JPanel
     @Override
     protected void paintComponent( Graphics g )
     {
+        super.paintComponent( g );
+
+        if ( grid == null ) {
+            return;
+        }
+
         int sideLen = grid.getSideLen();
 
         for ( int i = 0; i < sideLen; i++ )
