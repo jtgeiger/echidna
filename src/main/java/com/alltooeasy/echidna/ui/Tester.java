@@ -1,6 +1,7 @@
 package com.alltooeasy.echidna.ui;
 
 import java.io.InputStream;
+import java.io.InputStreamReader;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +22,7 @@ public class Tester
         log.info( "main() started." );
 
         //Grid g = new Grid();
-        Grid g = GridLoader.load( getClasspathResource( "/test3.txt" ) );
+        Grid g = GridLoader.load( new InputStreamReader( getClasspathResource( "/test3.txt" ) ) );
         SudokuPanel panel = new SudokuPanel();
         GuiBuilder guiBuilder = new GuiBuilder( panel );
         guiBuilder.show();

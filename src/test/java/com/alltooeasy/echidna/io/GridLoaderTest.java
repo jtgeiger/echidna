@@ -3,6 +3,7 @@ package com.alltooeasy.echidna.io;
 import static org.junit.Assert.assertEquals;
 
 import java.io.InputStream;
+import java.io.InputStreamReader;
 
 import org.junit.Test;
 
@@ -14,7 +15,7 @@ public class GridLoaderTest
     @Test
     public void testLoad()
     {
-        Grid g = GridLoader.load( getClasspathResource( "/gridPlain.txt" ) );
+        Grid g = GridLoader.load( new InputStreamReader( getClasspathResource( "/gridPlain.txt" ) ) );
 
         assertEquals( 9, g.getSideLen() );
     }

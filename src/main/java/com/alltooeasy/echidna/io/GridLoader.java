@@ -2,19 +2,18 @@ package com.alltooeasy.echidna.io;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.Reader;
 
 import com.alltooeasy.echidna.domain.Grid;
 
 public class GridLoader
 {
 
-    static public Grid load( InputStream ins )
+    static public Grid load( Reader reader )
     {
         Grid g = null;
 
-        try ( BufferedReader r = new BufferedReader( new InputStreamReader( ins ) ) )
+        try ( BufferedReader r = new BufferedReader( reader ) )
         {
             String line;
 
