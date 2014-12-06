@@ -36,7 +36,7 @@ public class Tester
         log.info( "main() finished; duration={} ms.", endMs - startMs );
     }
 
-    static private InputStream getClasspathResource( String name )
+    static public InputStream getClasspathResource( String name )
     {
         InputStream ins = Tester.class.getResourceAsStream( name );
 
