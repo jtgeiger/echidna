@@ -8,9 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.alltooeasy.echidna.domain.Cell;
 import com.alltooeasy.echidna.domain.Grid;
 import com.alltooeasy.echidna.engine.ControllerI;
@@ -18,7 +15,7 @@ import com.alltooeasy.echidna.engine.ControllerI;
 public class BacktrackSolver2 implements SolverI
 {
 
-    private final static Logger log = LoggerFactory.getLogger( BacktrackSolver2.class );
+//    private final static Logger log = LoggerFactory.getLogger( BacktrackSolver2.class );
 
     private final ControllerI controller;
 
