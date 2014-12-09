@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,15 +39,16 @@ public class BacktrackSolver2 implements SolverI
     private void backtrack(List<Point> moves, int k, Grid grid) {
 
         if ( Analyzer.isGridComplete( grid )) {
-            log.info( "solution:\n{}", grid );
+//            log.info( "solution:\n{}", grid );
             isBacktrackComplete = true;
+            controller.draw( grid );
         } else {
 
             k++;
 
             Collection<Point> candidates = generateCandidates(moves, k, grid);
 
-            log.info( "k={}: {}", k, candidates);
+//            log.info( "k={}: {}", k, candidates);
 
             for ( Point candidate : candidates ) {
 
@@ -76,47 +79,53 @@ public class BacktrackSolver2 implements SolverI
     {
         int sideLen = grid.getSideLen();
 
-        //index: number of candidates for each point, value: each point (possibly repeated) with
-        //its unique candidate val
-        List<List<Point>> points = new ArrayList<List<Point>>(sideLen);
-        for (int i = 0; i < sideLen; i++) {
-            points.add(new ArrayList<Point>());
-        }
+        // Map count of candidates to the list of candidates.
+        Map<Integer, List<Point>> countToCandidates = new HashMap<Integer, List<Point>>();
 
         for (int row = 0; row < sideLen; row++) {
             for (int col = 0; col < sideLen; col++) {
                 Integer value = grid.getCell( row, col ).getValue();
                 if ( value == null ) {
-                    List<Integer> candidates = getCandidates( row, col, grid );
-                    if (candidates.size() == 0) {
+                    List<Integer> possibleValues = getPossibilities( row, col, grid );
+
+                    int count = possibleValues.size();
+
+                    if (count == 0) {   // Dead end
                         return Collections.emptyList();
                     }
 
-                    int count = candidates.size();
-                    for (int i = 0; i < count; i++) {
-                        Point point = new Point(row, col, candidates.get( i ));
-                        List<Point> list = points.get( count );
+                    // Do we already have a point with this number of possibilities.
+                    List<Point> candidates = countToCandidates.get(count);
 
-                        list.add( point );
+                    if (candidates == null) {
+                        candidates = new ArrayList<Point>(count);
+
+                        countToCandidates.put( count, candidates );
+
+                        for (int i = 0; i < count; i++) {
+                            Point point = new Point(row, col, possibleValues.get( i ));
+                            candidates.add( point );
+                        }
+
+                        if (count == 1)
+                            return candidates;
                     }
                 }
             }
         }
 
-        // sort the cells by fewest number of candidates
-        List<Point> candidates = new ArrayList<Point>();
-        for(int i = 0; i < points.size() && candidates.size() == 0; i++) {
-            List<Point> list = points.get( i );
-            for (int j = 0; j < list.size(); j++) {
-                candidates.add( list.get( j ) );
-            }
+        // Find the point with the fewest possibilities.
+        for (int i = 1; i <= sideLen; i++) {
+            List<Point> candidates = countToCandidates.get(i);
+            if ( candidates != null)
+                return candidates;
         }
 
-        return candidates;
+        throw new RuntimeException("shouldn't get here");
     }
 
 
-    private List<Integer> getCandidates( int row, int col, Grid grid )
+    private List<Integer> getPossibilities( int row, int col, Grid grid )
     {
         boolean[] candidates = new boolean[grid.getSideLen()];
         Arrays.fill( candidates, true );
@@ -124,16 +133,16 @@ public class BacktrackSolver2 implements SolverI
         Cell[] r = grid.getRow( row );
         Cell[] c = grid.getCol( col );
 
-        setCandidates(r, candidates);
-        setCandidates(c, candidates);
+        filterPossibilities(r, candidates);
+        filterPossibilities(c, candidates);
 
         Grid cluster = grid.getCluster( row, col );
         for (int i = 0; i < cluster.getSideLen(); i++) {
             r = cluster.getRow( i );
             c = cluster.getCol( i );
 
-            setCandidates(r, candidates);
-            setCandidates(c, candidates);
+            filterPossibilities(r, candidates);
+            filterPossibilities(c, candidates);
         }
 
         List<Integer> vals = new ArrayList<Integer>(candidates.length);
@@ -146,7 +155,7 @@ public class BacktrackSolver2 implements SolverI
         return vals;
     }
 
-    private void setCandidates( Cell[] run, boolean[] candidates ) {
+    private void filterPossibilities( Cell[] run, boolean[] candidates ) {
         for (int i = 0; i < run.length; i++) {
             Integer value = run[i].getValue();
             if ( value != null ) {

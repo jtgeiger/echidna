@@ -6,7 +6,7 @@ import java.io.InputStreamReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.alltooeasy.echidna.analysis.BacktrackSolver;
+import com.alltooeasy.echidna.analysis.BacktrackSolver2;
 import com.alltooeasy.echidna.analysis.SolverI;
 import com.alltooeasy.echidna.domain.Grid;
 import com.alltooeasy.echidna.engine.Controller;
@@ -31,7 +31,8 @@ public class Tester
         Controller controller = new Controller( panel );
 
 //        SolverI solver = new LoopingSolver( controller );
-        SolverI solver = new BacktrackSolver( controller );
+//        SolverI solver = new BacktrackSolver( controller );
+        SolverI solver = new BacktrackSolver2( controller );
 
         boolean isComplete = solver.solve( g );
         System.out.println(isComplete);
